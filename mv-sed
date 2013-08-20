@@ -1,0 +1,13 @@
+#!/bin/bash
+
+# usage mv-sed expression files
+
+expression=$1
+shift
+
+SED=/usr/bin/sed
+CP=/usr/bin/cp
+
+for filename in "$@"; do
+  mv "$filename" "$(echo "$filename" | sed -s "$expression")"
+done
