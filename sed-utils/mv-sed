@@ -2,12 +2,28 @@
 
 # usage mv-sed expression files
 
-expression=$1
-shift
 
-SED=/usr/bin/sed
-CP=/usr/bin/cp
+# Defaults
+dry_run=0
 
-for filename in "$@"; do
-  mv "$filename" "$(echo "$filename" | sed -s "$expression")"
+eval set -- $(getopt -n $0 -o "-s:n" -- "$@")
+
+declare -a files
+
+while [ $# -gt 0 ] ; do
+        case "$1" in
+                -n) dry_run=1 ; shift ;;
+                -s) expression=$2 ; shift 2;;
+                --) shift ;;
+                -*) echo "bad option '$1'" ; exit 1 ;;
+                *) files=("${files[@]}" "$1") ; shift ;;
+         esac
+done
+
+for filename in "${files[@]}"; do
+  if [ $dry_run = 1 ]; then
+    echo "$filename" "->" "$(echo "$filename" | sed -s "$expression")"
+  else
+    mv "$filename" "$(echo "$filename" | sed -s "$expression")"
+  fi
 done
