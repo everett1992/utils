@@ -2,12 +2,23 @@
 
 # usage mv-sed expression files
 
+if [ "$1" = '-h' ] || [ $# -le 2 ]; then
+  echo "$(basename $0) expression [filenames..]"
+  exit 1
+fi
+
 expression=$1
 shift
 
+function debug {
+ echo "mv $*"
+}
+
 SED=/usr/bin/sed
-CP=/usr/bin/cp
+MV=/usr/bin/mv
+#MV=debug
+
 
 for filename in "$@"; do
-  mv "$filename" "$(echo "$filename" | sed -s "$expression")"
+  $MV "$filename" "$(echo "$filename" | $SED -s "$expression")"
 done
