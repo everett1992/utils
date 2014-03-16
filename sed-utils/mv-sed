@@ -3,8 +3,14 @@
 # usage mv-sed expression files
 
 
+function usage() {
+  echo "-h	Print this message."
+  echo "-f	Move the files, without this flag changed filenames are printed."
+  echo "-s	Sed expression."
+}
+
 # Defaults
-dry_run=0
+dry_run=1
 
 eval set -- $(getopt -n $0 -o "-s:n" -- "$@")
 
@@ -12,8 +18,9 @@ declare -a files
 
 while [ $# -gt 0 ] ; do
         case "$1" in
-                -n) dry_run=1 ; shift ;;
+                -f) dry_run=0 ; shift ;;
                 -s) expression=$2 ; shift 2;;
+                -h) usage; exit;;
                 --) shift ;;
                 -*) echo "bad option '$1'" ; exit 1 ;;
                 *) files=("${files[@]}" "$1") ; shift ;;
