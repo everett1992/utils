@@ -1,0 +1,20 @@
+#! /bin/bash
+# Caleb Evertt
+# Toggles between workman and us standard keyboard layouts
+
+function set-layout {
+  layout=$1
+
+  notify-send "Using $layout layout"
+
+  setxkbmap -layout $layout
+
+  xmodmap ~/.Xmodmap
+}
+
+setxkbmap -query | grep -q "^layout:\s\+us$"
+if [ $? -eq 0 ]; then
+  set-layout "workman"
+else
+  set-layout "us"
+fi
